@@ -11,22 +11,29 @@ from agent_memory_gateway.models import (
     RecallRequest,
     StoreRequest,
 )
+from agent_memory_gateway import __version__
+from agent_memory_gateway.config import get_settings
 from agent_memory_gateway.service import MemoryGateway
-from agent_memory_gateway.store import SQLiteMemoryStore
+from agent_memory_gateway.store_factory import create_memory_store
 
 app = FastAPI(
     title="Agent Memory Gateway",
     description="Unified memory API for AI agents",
-    version="0.1.0",
+    version=__version__,
 )
 
-_store = SQLiteMemoryStore()
+_settings = get_settings()
+_store = create_memory_store(_settings)
 _gateway = MemoryGateway(_store)
 
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "backend": _settings.backend,
+        "otel_enabled": str(_settings.otel_enabled).lower(),
+    }
 
 
 @app.post("/v1/memory/store", response_model=MemoryRecord)

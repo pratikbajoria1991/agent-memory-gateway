@@ -16,17 +16,41 @@ Built to fill the gap between agent frameworks (LangChain, etc.), vector databas
 | Context budget manager (offload to memory) | ✅ |
 | Session consolidation | ✅ |
 | Memory operation tracing (logs) | ✅ |
-| OpenTelemetry export | 🔜 optional extra |
-| Redis / Qdrant backends | 🔜 planned |
+| OpenTelemetry export | ✅ optional extra |
+| Redis backend | ✅ optional extra |
+| Recall eval harness (`amg eval`) | ✅ |
+| LangChain / LlamaIndex adapters | ✅ |
 
 ## Quick start
 
 ```bash
 pip install -e .
-amg --port 8741
+amg serve --port 8741
 ```
 
 API docs: http://127.0.0.1:8741/docs
+
+### Optional extras
+
+```bash
+pip install -e ".[redis,otel,dev]"
+```
+
+### Configuration (environment)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AMG_BACKEND` | `sqlite` | `sqlite` or `redis` |
+| `AMG_SQLITE_PATH` | `:memory:` | SQLite database path |
+| `AMG_REDIS_URL` | `redis://localhost:6379/0` | Redis connection URL |
+| `AMG_OTEL_ENABLED` | `false` | Enable OpenTelemetry spans |
+
+### Recall evaluation
+
+```bash
+amg eval
+amg eval --k 5 --json
+```
 
 ## API
 
@@ -88,9 +112,9 @@ curl -X POST http://127.0.0.1:8741/v1/memory/budget \
 ```python
 from agent_memory_gateway.models import StoreRequest, RecallRequest, MemoryType
 from agent_memory_gateway.service import MemoryGateway
-from agent_memory_gateway.store import SQLiteMemoryStore
+from agent_memory_gateway.store_factory import create_memory_store
 
-gw = MemoryGateway(SQLiteMemoryStore("memory.db"))
+gw = MemoryGateway(create_memory_store())
 
 gw.store(StoreRequest(
     tenant_id="acme",
@@ -118,7 +142,20 @@ Agent / Framework
            │
      ┌─────┴─────┐
      ▼           ▼
- SQLite      (Redis / Qdrant — planned)
+ SQLite        Redis
+```
+
+## Framework adapters
+
+```python
+from agent_memory_gateway.adapters.langchain import as_langchain_memory
+from agent_memory_gateway.adapters.llamaindex import as_llamaindex_memory
+
+lc_mem = as_langchain_memory(gw, tenant_id="acme", agent_id="bot", session_id="s1")
+lc_mem.save_context({"input": "question"}, {"output": "answer"})
+
+li_mem = as_llamaindex_memory(gw, "acme", "bot", session_id="s1")
+li_mem.put({"role": "user", "content": "remember this preference"})
 ```
 
 ## Deploy to GitHub
