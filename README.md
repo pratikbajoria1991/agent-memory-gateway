@@ -1,5 +1,9 @@
 # Agent Memory Gateway
 
+[![CI](https://github.com/pratikbajoria1991/agent-memory-gateway/actions/workflows/ci.yml/badge.svg)](https://github.com/pratikbajoria1991/agent-memory-gateway/actions/workflows/ci.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Unified memory layer for AI agents. One API for **episodic**, **semantic**, and **procedural** memory — with multi-tenancy, TTL, GDPR erase, context budgeting, and observability hooks.
 
 Built to fill the gap between agent frameworks (LangChain, etc.), vector databases, and observability tools — none of which own memory end-to-end.
@@ -25,7 +29,7 @@ Built to fill the gap between agent frameworks (LangChain, etc.), vector databas
 
 ```bash
 pip install -e .
-amg serve --port 8741
+amg --port 8741 serve
 ```
 
 API docs: http://127.0.0.1:8741/docs

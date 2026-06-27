@@ -39,3 +39,7 @@ def main() -> None:
         sys.exit(0 if report["passed"] == report["total"] else 1)
 
     uvicorn.run("agent_memory_gateway.api:app", host=args.host, port=args.port, reload=False)
+
+
+if __name__ == "__main__":
+    main()
