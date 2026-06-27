@@ -29,7 +29,8 @@ Built to fill the gap between agent frameworks (LangChain, etc.), vector databas
 
 ```bash
 pip install -e .
-amg --port 8741 serve
+amg serve --port 8741
+# or: amg --port 8741 serve
 ```
 
 API docs: http://127.0.0.1:8741/docs

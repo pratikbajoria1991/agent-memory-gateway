@@ -15,7 +15,9 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8741, help="API port (serve mode)")
     sub = parser.add_subparsers(dest="command")
 
-    sub.add_parser("serve", help="Run API server")
+    serve_cmd = sub.add_parser("serve", help="Run API server")
+    serve_cmd.add_argument("--host", default="127.0.0.1", help="API host")
+    serve_cmd.add_argument("--port", type=int, default=8741, help="API port")
 
     eval_cmd = sub.add_parser("eval", help="Run recall evaluation harness")
     eval_cmd.add_argument("--k", type=int, default=3, help="Recall@k limit")
