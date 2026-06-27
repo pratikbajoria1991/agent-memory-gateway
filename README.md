@@ -35,6 +35,13 @@ amg serve --port 8741
 
 API docs: http://127.0.0.1:8741/docs
 
+**Windows:** If `amg` is not on your PATH after `pip install`, use:
+
+```powershell
+python -m agent_memory_gateway.cli serve --port 8741
+python -m agent_memory_gateway.cli eval
+```
+
 ### Optional extras
 
 ```bash
